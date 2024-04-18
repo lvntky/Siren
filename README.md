@@ -1,6 +1,6 @@
 # Siren | SimpleRenderer
 
-Siren is a lightweight C++ program designed to render Wavefront .obj files into images. It provides a simple and efficient way to visualize 3D models without the need for complex graphics libraries.
+Siren is a lightweight Cross Platform C++ program designed to render Wavefront .obj files into images. It provides a simple and efficient way to visualize 3D models without the need for complex graphics libraries.
 
 ## Features
 
