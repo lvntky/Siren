@@ -74,7 +74,7 @@ void tga_dump_headers(const tga_image_t *image, const char *output_file);
 
 #endif //__TARGALIB_H__
 
-#ifdef TARGALIB_IMPLEMENTATION
+//#ifdef TARGALIB_IMPLEMENTATION
 
 int tga_read(const char *filename, tga_image_t *image)
 {
@@ -276,7 +276,7 @@ void tga_set_pixel(const tga_image_t *image, int x, int y, tga_color_t color)
 	}
 }
 
-#endif //TARGALIB_IMPLEMENTATION
+//#endif //TARGALIB_IMPLEMENTATION
 /*
 -------------------------------------------------------------------------------
 This software available under unlicense

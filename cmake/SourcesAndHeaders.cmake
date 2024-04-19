@@ -1,5 +1,5 @@
 set(sources
-    src/tmp.cpp
+    src/bresenham_manager.cpp
 )
 
 set(exe_sources
@@ -8,9 +8,10 @@ set(exe_sources
 )
 
 set(headers
-    include/siren/tmp.hpp
+    include/siren/common.hpp
+    include/siren/bresenham_manager.hpp
 )
 
 set(test_sources
-  src/tmp_test.cpp
+ # src/tmp_test.cpp
 )
