@@ -4,21 +4,27 @@
 #include <string>
 #include <vector>
 
-#include "bresenham_manager.hpp"
-#include "misc/vec3f.hpp"
+#include "targalib/targalib.h"
+
+struct Vertex
+{
+  float x, y, z;
+};
+
+struct Face
+{
+  int v1, v2, v3;
+};
 
 class ModelManager
 {
  private:
-  std::vector<Vec3f> vertices;
-  std::vector<std::vector<int>> faces;
+  std::vector<Vertex> vertices;
+  std::vector<Face> faces;
 
  public:
-  ModelManager(const char *source);
-  int getVerticeNumbers();
-  int getFaceNumbers();
-  Vec3f getVerticeByIndex(int i);
-  std::vector<int> getFaceByIndex(int i);
+  ModelManager(const char* filename);
+  void render(tga_image_t* image, tga_color_t color);
 };
 
 #endif  // MODEL_MANAGER_H_

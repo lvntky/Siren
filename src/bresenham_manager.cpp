@@ -1,11 +1,11 @@
 #include "siren/bresenham_manager.hpp"
 
-BresenhamManager::BresenhamManager(tga_image_t *_image)
+BresenhamManager::BresenhamManager(tga_image_t* _image)
 {
   this->image = _image;
 }
 
-BresenhamManager::BresenhamManager(int _x0, int _y0, int _x1, int _y1, tga_image_t *_image, tga_color_t _color)
+BresenhamManager::BresenhamManager(float _x0, float _y0, float _x1, float _y1, tga_image_t* _image, tga_color_t _color)
 {
   this->x0 = _x0;
   this->y0 = _y0;
@@ -15,7 +15,7 @@ BresenhamManager::BresenhamManager(int _x0, int _y0, int _x1, int _y1, tga_image
   this->color = _color;
 }
 
-void BresenhamManager::setEndpoints(int _x0, int _y0, int _x1, int _y1)
+void BresenhamManager::setEndpoints(float _x0, float _y0, float _x1, float _y1)
 {
   this->x0 = _x0;
   this->y0 = _y0;
@@ -30,30 +30,26 @@ void BresenhamManager::setColor(tga_color_t _color)
 
 void BresenhamManager::drawLine()
 {
-  int dx = abs(x1 - x0);
-  int dy = abs(y1 - y0);
-  int sx = x0 < x1 ? 1 : -1;
-  int sy = y0 < y1 ? 1 : -1;
-  int err = dx - dy;
+  float dx = x1 - x0;
+  float dy = y1 - y0;
+  float step = std::max(std::abs(dx), std::abs(dy));  // Determine the number of steps needed
+  float xIncrement = dx / step;
+  float yIncrement = dy / step;
 
-  while (x0 != x1 || y0 != y1)
+  float x = x0;
+  float y = y0;
+
+  for (int i = 0; i <= step; ++i)
   {
-    tga_set_pixel(image, x0, y0, color);
-    int e2 = 2 * err;
-    if (e2 > -dy)
-    {
-      err -= dy;
-      x0 += sx;
-    }
-    if (e2 < dx)
-    {
-      err += dx;
-      y0 += sy;
-    }
+    int intX = static_cast<int>(x + 0.5f);  // Round to nearest integer
+    int intY = static_cast<int>(y + 0.5f);  // Round to nearest integer
+    tga_set_pixel(image, intX, intY, color);
+    x += xIncrement;
+    y += yIncrement;
   }
 }
 
-void BresenhamManager::setImage(tga_image_t *_image)
+void BresenhamManager::setImage(tga_image_t* _image)
 {
   this->image = _image;
 }
