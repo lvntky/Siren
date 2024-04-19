@@ -1,23 +1,23 @@
 #include "siren/bresenham_manager.hpp"
 
-BresenhamManager::BresenhamManager(int x0, int y0, int x1, int y1, tga_image_t *image, tga_color_t color) {
-    this->x0 = x0;
-    this->y0 = y0;
-    this->x1 = x1;
-    this->y1 = y1;
-    this->image = image;
-    this->color = color;
+BresenhamManager::BresenhamManager(int _x0, int _y0, int _x1, int _y1, tga_image_t *_image, tga_color_t _color) {
+    this->x0 = _x0;
+    this->y0 = _y0;
+    this->x1 = _x1;
+    this->y1 = _y1;
+    this->image = _image;
+    this->color = _color;
 }
 
-void BresenhamManager::setEndpoints(int x0, int y0, int x1, int y1) {
-    this->x0 = x0;
-    this->y0 = y0;
-    this->x1 = x1;
-    this->y1 = y1;
+void BresenhamManager::setEndpoints(int _x0, int _y0, int _x1, int _y1) {
+    this->x0 = _x0;
+    this->y0 = _y0;
+    this->x1 = _x1;
+    this->y1 = _y1;
 }
 
-void BresenhamManager::setColor(tga_color_t color) {
-    this->color = color;
+void BresenhamManager::setColor(tga_color_t _color) {
+    this->color = _color;
 }
 
 void BresenhamManager::drawLine() {
