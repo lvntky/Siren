@@ -1,6 +1,6 @@
 #include <iostream>
 #include "siren/bresenham_manager.hpp"
-#include "siren/model_parser.hpp"
+#include "siren/model_manager.hpp"
 
 int main() {
     tga_color_t black = {0, 0, 0};
@@ -11,15 +11,9 @@ int main() {
         std::cerr << "Failed to create image" << std::endl;
         return 1;
     }
-    //tga_set_bg(image, black);
+    tga_set_bg(image, white);
 
-    BresenhamManager bresenhamManager(image);
-
-    ModelParser modelParser("./obj/african_head.obj");
-
-    modelParser.render(bresenhamManager, white);
-
-    tga_write("new.tga", image);
+    tga_write("output.tga", image);
     tga_free(image);
 
     return 0;
