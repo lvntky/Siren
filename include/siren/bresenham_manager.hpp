@@ -15,10 +15,11 @@ private:
     tga_image_t *image;
     tga_color_t color;
 public:
-    BresenhamManager();
+    BresenhamManager(tga_image_t *image);
     BresenhamManager(int x0, int y0, int x1, int y1, tga_image_t *image, tga_color_t color);
     void setEndpoints(int x0, int y0, int x1, int y1);
     void setColor(tga_color_t color);
+    void setImage(tga_image_t *image);
     void drawLine();
 };
 

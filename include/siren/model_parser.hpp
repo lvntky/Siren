@@ -6,28 +6,23 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include "bresenham_manager.hpp" // Include the header file for BresenhamManager here
 
 struct Vec3
 {
     float x, y, z;
 };
 
-struct FaceVertex
-{
-    int vertexIndex;
-    int normalIndex;
-};
-
 class ModelParser
 {
 private:
     std::vector<Vec3> vertices;
-    std::vector<Vec3> normals;
-    std::vector<FaceVertex> faces;
+    std::vector<std::vector<int>> faces;
+
 public:
-    ModelParser(const std::string& filename);
+    ModelParser(const std::string &filename);
     void printModelInfo();
-    ~ModelParser();
+    void render(BresenhamManager &renderer, tga_color_t color);
 };
 
-#endif //MODEL_PARSER_H_
+#endif // MODEL_PARSER_H_

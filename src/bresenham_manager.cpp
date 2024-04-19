@@ -1,5 +1,9 @@
 #include "siren/bresenham_manager.hpp"
 
+BresenhamManager::BresenhamManager(tga_image_t *_image) {
+    this->image = _image;
+}
+
 BresenhamManager::BresenhamManager(int _x0, int _y0, int _x1, int _y1, tga_image_t *_image, tga_color_t _color) {
     this->x0 = _x0;
     this->y0 = _y0;
@@ -39,4 +43,8 @@ void BresenhamManager::drawLine() {
             y0 += sy;
         }
     }
+}
+
+void BresenhamManager::setImage(tga_image_t *_image) {
+    this->image = _image;
 }
