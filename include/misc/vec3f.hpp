@@ -11,6 +11,7 @@
 class Vec3f {
 public:
     float x, y, z;
+    float raw[3]; 
 
     Vec3f(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) : x(_x), y(_y), z(_z) {}
 
