@@ -4,7 +4,6 @@
 #include <cstdint>
 #include <cmath>
 #include "../targalib/targalib.h"
-#include "common.hpp"
 
 class BresenhamManager
 {

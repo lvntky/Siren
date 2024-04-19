@@ -1,5 +1,4 @@
 #include "siren/bresenham_manager.hpp"
-#define TARGALIB_IMPLEMENTATION
 
 BresenhamManager::BresenhamManager(int x0, int y0, int x1, int y1, tga_image_t *image, tga_color_t color) {
     this->x0 = x0;
