@@ -1,11 +1,24 @@
-#ifndef MODEL_PARSER_H_
-#define MODEL_PARSER_H_
+#ifndef MODEL_MANAGER_H_
+#define MODEL_MANAGER_H_
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
 #include <string>
-#include "bresenham_manager.hpp" // Include the header file for BresenhamManager here
+#include <vector>
 
-#endif // MODEL_PARSER_H_
+#include "bresenham_manager.hpp"
+#include "misc/vec3f.hpp"
+
+class ModelManager
+{
+ private:
+  std::vector<Vec3f> vertices;
+  std::vector<std::vector<int>> faces;
+
+ public:
+  ModelManager(const char *source);
+  int getVerticeNumbers();
+  int getFaceNumbers();
+  Vec3f getVerticeByIndex(int i);
+  std::vector<int> getFaceByIndex(int i);
+};
+
+#endif  // MODEL_MANAGER_H_

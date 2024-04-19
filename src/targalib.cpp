@@ -2,202 +2,172 @@
 
 int tga_read(const char *filename, tga_image_t *image)
 {
-	FILE *file = fopen(filename, "rb");
-	if (!file) {
-		fprintf(stderr, "%s Unable to open file '%s' for reading.\n",
-			TARGALIB_ERROR, filename);
-		return RETURN_FAIL;
-	}
+  FILE *file = fopen(filename, "rb");
+  if (!file)
+  {
+    fprintf(stderr, "%s Unable to open file '%s' for reading.\n", TARGALIB_ERROR, filename);
+    return RETURN_FAIL;
+  }
 
-	// Read TGA header
-	fread(&image->header.id_length, sizeof(image->header.id_length), 1,
-	      file);
-	fread(&image->header.color_map_type,
-	      sizeof(image->header.color_map_type), 1, file);
-	fread(&image->header.image_type, sizeof(image->header.image_type), 1,
-	      file);
-	fread(&image->header.color_map_origin,
-	      sizeof(image->header.color_map_origin), 1, file);
-	fread(&image->header.color_map_length,
-	      sizeof(image->header.color_map_length), 1, file);
-	fread(&image->header.color_map_depth,
-	      sizeof(image->header.color_map_depth), 1, file);
-	fread(&image->header.x_origin, sizeof(image->header.x_origin), 1, file);
-	fread(&image->header.y_origin, sizeof(image->header.y_origin), 1, file);
-	fread(&image->header.width, sizeof(image->header.width), 1, file);
-	fread(&image->header.height, sizeof(image->header.height), 1, file);
-	fread(&image->header.bits_per_pixel,
-	      sizeof(image->header.bits_per_pixel), 1, file);
-	fread(&image->header.image_descriptor,
-	      sizeof(image->header.image_descriptor), 1, file);
+  // Read TGA header
+  fread(&image->header.id_length, sizeof(image->header.id_length), 1, file);
+  fread(&image->header.color_map_type, sizeof(image->header.color_map_type), 1, file);
+  fread(&image->header.image_type, sizeof(image->header.image_type), 1, file);
+  fread(&image->header.color_map_origin, sizeof(image->header.color_map_origin), 1, file);
+  fread(&image->header.color_map_length, sizeof(image->header.color_map_length), 1, file);
+  fread(&image->header.color_map_depth, sizeof(image->header.color_map_depth), 1, file);
+  fread(&image->header.x_origin, sizeof(image->header.x_origin), 1, file);
+  fread(&image->header.y_origin, sizeof(image->header.y_origin), 1, file);
+  fread(&image->header.width, sizeof(image->header.width), 1, file);
+  fread(&image->header.height, sizeof(image->header.height), 1, file);
+  fread(&image->header.bits_per_pixel, sizeof(image->header.bits_per_pixel), 1, file);
+  fread(&image->header.image_descriptor, sizeof(image->header.image_descriptor), 1, file);
 
-	// Skip image ID field if present
-	if (image->header.id_length > 0) {
-		fseek(file, image->header.id_length, SEEK_CUR);
-	}
+  // Skip image ID field if present
+  if (image->header.id_length > 0)
+  {
+    fseek(file, image->header.id_length, SEEK_CUR);
+  }
 
-	// Allocate memory for image data
-	image->image_data = (tga_color_t *)malloc(
-		image->header.width * image->header.height *
-		(image->header.bits_per_pixel / 8));
-	if (!image->image_data) {
-		fclose(file);
-		fprintf(stderr,
-			"%s Failed to allocate memory for image(%s) data.\n,",
-			TARGALIB_ERROR, filename);
-		return RETURN_FAIL;
-	}
+  // Allocate memory for image data
+  image->image_data = (tga_color_t *)malloc(image->header.width * image->header.height * (image->header.bits_per_pixel / 8));
+  if (!image->image_data)
+  {
+    fclose(file);
+    fprintf(stderr, "%s Failed to allocate memory for image(%s) data.\n,", TARGALIB_ERROR, filename);
+    return RETURN_FAIL;
+  }
 
-	// Read image data
-	fread(image->image_data, 1,
-	      image->header.width * image->header.height *
-		      (image->header.bits_per_pixel / 8),
-	      file);
+  // Read image data
+  fread(image->image_data, 1, image->header.width * image->header.height * (image->header.bits_per_pixel / 8), file);
 
-	fclose(file);
+  fclose(file);
 
-	return RETURN_SUCCESS;
+  return RETURN_SUCCESS;
 }
 
 void tga_dump_headers(const tga_image_t *image, const char *output_file)
 {
-	FILE *dump_file = fopen(output_file, "w");
-	if (!dump_file) {
-		fprintf(stderr, "%s Failed to create header dump file.",
-			TARGALIB_ERROR);
-		fclose(dump_file);
-		return;
-	}
-	fprintf(dump_file, "TGA HEADER DUMP:\n");
-	fprintf(dump_file, "\tid_length:\t%d\n", image->header.id_length);
-	fprintf(dump_file, "\tcolor_map_type:\t%d\n",
-		image->header.color_map_type);
-	fprintf(dump_file, "\timage_type:\t%d\n", image->header.image_type);
-	fprintf(dump_file, "\tcolor_map_origin:\t%d\n",
-		image->header.color_map_origin);
-	fprintf(dump_file, "\tcolor_map_length:\t%d\n",
-		image->header.color_map_length);
-	fprintf(dump_file, "\tcolor_map_depth:\t%d\n",
-		image->header.color_map_depth);
-	fprintf(dump_file, "\tx_origin:\t%d\n", image->header.x_origin);
-	fprintf(dump_file, "\ty_origin:\t%d\n", image->header.y_origin);
-	fprintf(dump_file, "\twidth:\t%d\n", image->header.width);
-	fprintf(dump_file, "\theight:\t%d\n", image->header.height);
-	fprintf(dump_file, "\tbits_per_pixel:\t%d\n",
-		image->header.bits_per_pixel);
-	fprintf(dump_file, "\timage_descriptor:\t%d\n",
-		image->header.image_descriptor);
+  FILE *dump_file = fopen(output_file, "w");
+  if (!dump_file)
+  {
+    fprintf(stderr, "%s Failed to create header dump file.", TARGALIB_ERROR);
+    fclose(dump_file);
+    return;
+  }
+  fprintf(dump_file, "TGA HEADER DUMP:\n");
+  fprintf(dump_file, "\tid_length:\t%d\n", image->header.id_length);
+  fprintf(dump_file, "\tcolor_map_type:\t%d\n", image->header.color_map_type);
+  fprintf(dump_file, "\timage_type:\t%d\n", image->header.image_type);
+  fprintf(dump_file, "\tcolor_map_origin:\t%d\n", image->header.color_map_origin);
+  fprintf(dump_file, "\tcolor_map_length:\t%d\n", image->header.color_map_length);
+  fprintf(dump_file, "\tcolor_map_depth:\t%d\n", image->header.color_map_depth);
+  fprintf(dump_file, "\tx_origin:\t%d\n", image->header.x_origin);
+  fprintf(dump_file, "\ty_origin:\t%d\n", image->header.y_origin);
+  fprintf(dump_file, "\twidth:\t%d\n", image->header.width);
+  fprintf(dump_file, "\theight:\t%d\n", image->header.height);
+  fprintf(dump_file, "\tbits_per_pixel:\t%d\n", image->header.bits_per_pixel);
+  fprintf(dump_file, "\timage_descriptor:\t%d\n", image->header.image_descriptor);
 
-	fclose(dump_file);
+  fclose(dump_file);
 }
 
 tga_image_t *tga_new(uint16_t width, uint16_t height)
 {
-	tga_image_t *image = (tga_image_t *)malloc(sizeof(tga_image_t));
-	if (!image) {
-		fprintf(stderr, "%s Failed to allocate memory for TGA image.\n",
-			TARGALIB_ERROR);
-		return NULL;
-	}
-	// Initialize TGA header fields
-	image->header.id_length = 0;
-	image->header.color_map_type = 0;
-	image->header.image_type = 2; // Uncompressed true-color image
-	image->header.color_map_origin = 0;
-	image->header.color_map_length = 0;
-	image->header.color_map_depth = 0;
-	image->header.x_origin = 0;
-	image->header.y_origin = 0;
-	image->header.width = width;
-	image->header.height = height;
-	image->header.bits_per_pixel = 24; // 24 bits per pixel (RGB)
-	image->header.image_descriptor = 0x20; // Default image descriptor
+  tga_image_t *image = (tga_image_t *)malloc(sizeof(tga_image_t));
+  if (!image)
+  {
+    fprintf(stderr, "%s Failed to allocate memory for TGA image.\n", TARGALIB_ERROR);
+    return NULL;
+  }
+  // Initialize TGA header fields
+  image->header.id_length = 0;
+  image->header.color_map_type = 0;
+  image->header.image_type = 2;  // Uncompressed true-color image
+  image->header.color_map_origin = 0;
+  image->header.color_map_length = 0;
+  image->header.color_map_depth = 0;
+  image->header.x_origin = 0;
+  image->header.y_origin = 0;
+  image->header.width = width;
+  image->header.height = height;
+  image->header.bits_per_pixel = 24;      // 24 bits per pixel (RGB)
+  image->header.image_descriptor = 0x20;  // Default image descriptor
 
-	image->image_data =
-		(tga_color_t *)malloc(width * height * sizeof(tga_color_t));
-	if (!image->image_data) {
-		fprintf(stderr,
-			"%s Failed to allocate memory for image data.\n",
-			TARGALIB_ERROR);
-		free(image);
-		return NULL;
-	}
+  image->image_data = (tga_color_t *)malloc(width * height * sizeof(tga_color_t));
+  if (!image->image_data)
+  {
+    fprintf(stderr, "%s Failed to allocate memory for image data.\n", TARGALIB_ERROR);
+    free(image);
+    return NULL;
+  }
 
-	memset(image->image_data, 0, width * height * sizeof(tga_color_t));
+  memset(image->image_data, 0, width * height * sizeof(tga_color_t));
 
-	return image;
+  return image;
 }
 
 int tga_write(const char *filename, const tga_image_t *image)
 {
-	FILE *file = fopen(filename, "wb");
-	if (!file) {
-		fprintf(stderr, "%s Unable to open file '%s' for writing.\n",
-			TARGALIB_ERROR, filename);
-		return RETURN_FAIL;
-	}
+  FILE *file = fopen(filename, "wb");
+  if (!file)
+  {
+    fprintf(stderr, "%s Unable to open file '%s' for writing.\n", TARGALIB_ERROR, filename);
+    return RETURN_FAIL;
+  }
 
-	// Write TGA header
-	fwrite(&image->header.id_length, sizeof(image->header.id_length), 1,
-	       file);
-	fwrite(&image->header.color_map_type,
-	       sizeof(image->header.color_map_type), 1, file);
-	fwrite(&image->header.image_type, sizeof(image->header.image_type), 1,
-	       file);
-	fwrite(&image->header.color_map_origin,
-	       sizeof(image->header.color_map_origin), 1, file);
-	fwrite(&image->header.color_map_length,
-	       sizeof(image->header.color_map_length), 1, file);
-	fwrite(&image->header.color_map_depth,
-	       sizeof(image->header.color_map_depth), 1, file);
-	fwrite(&image->header.x_origin, sizeof(image->header.x_origin), 1,
-	       file);
-	fwrite(&image->header.y_origin, sizeof(image->header.y_origin), 1,
-	       file);
-	fwrite(&image->header.width, sizeof(image->header.width), 1, file);
-	fwrite(&image->header.height, sizeof(image->header.height), 1, file);
-	fwrite(&image->header.bits_per_pixel,
-	       sizeof(image->header.bits_per_pixel), 1, file);
-	fwrite(&image->header.image_descriptor,
-	       sizeof(image->header.image_descriptor), 1, file);
+  // Write TGA header
+  fwrite(&image->header.id_length, sizeof(image->header.id_length), 1, file);
+  fwrite(&image->header.color_map_type, sizeof(image->header.color_map_type), 1, file);
+  fwrite(&image->header.image_type, sizeof(image->header.image_type), 1, file);
+  fwrite(&image->header.color_map_origin, sizeof(image->header.color_map_origin), 1, file);
+  fwrite(&image->header.color_map_length, sizeof(image->header.color_map_length), 1, file);
+  fwrite(&image->header.color_map_depth, sizeof(image->header.color_map_depth), 1, file);
+  fwrite(&image->header.x_origin, sizeof(image->header.x_origin), 1, file);
+  fwrite(&image->header.y_origin, sizeof(image->header.y_origin), 1, file);
+  fwrite(&image->header.width, sizeof(image->header.width), 1, file);
+  fwrite(&image->header.height, sizeof(image->header.height), 1, file);
+  fwrite(&image->header.bits_per_pixel, sizeof(image->header.bits_per_pixel), 1, file);
+  fwrite(&image->header.image_descriptor, sizeof(image->header.image_descriptor), 1, file);
 
-	// Write image data
-	fwrite(image->image_data, 1,
-	       image->header.width * image->header.height *
-		       (image->header.bits_per_pixel / 8),
-	       file);
+  // Write image data
+  fwrite(image->image_data, 1, image->header.width * image->header.height * (image->header.bits_per_pixel / 8), file);
 
-	fclose(file);
-	return RETURN_SUCCESS;
+  fclose(file);
+  return RETURN_SUCCESS;
 }
 
 void tga_free(tga_image_t *image)
 {
-	if (image) {
-		free(image->image_data);
-		free(image);
-	}
+  if (image)
+  {
+    free(image->image_data);
+    free(image);
+  }
 }
 
 void tga_set_bg(const tga_image_t *image, tga_color_t color)
 {
-	for (int y = 0; y < image->header.height; y++) {
-		for (int x = 0; x < image->header.width; x++) {
-			image->image_data[y * image->header.width + x] = color;
-		}
-	}
+  for (int y = 0; y < image->header.height; y++)
+  {
+    for (int x = 0; x < image->header.width; x++)
+    {
+      image->image_data[y * image->header.width + x] = color;
+    }
+  }
 }
 
 void tga_set_pixel(const tga_image_t *image, int x, int y, tga_color_t color)
 {
-	if (x >= 0 && x < image->header.width && y >= 0 &&
-	    y < image->header.height) {
-		image->image_data[y * image->header.width + x] = color;
-	} else {
-		fprintf(stderr, "%s Invalid dot coordinates. Dot not drawn.\n",
-			TARGALIB_ERROR);
-		return;
-	}
+  if (x >= 0 && x < image->header.width && y >= 0 && y < image->header.height)
+  {
+    image->image_data[y * image->header.width + x] = color;
+  }
+  else
+  {
+    fprintf(stderr, "%s Invalid dot coordinates. Dot not drawn.\n", TARGALIB_ERROR);
+    return;
+  }
 }
 
 //#endif //TARGALIB_IMPLEMENTATION

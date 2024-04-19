@@ -4,4 +4,4 @@
 #define SIREN_SUCCESS 0
 #define SIREN_FAILURE 1
 
-#endif //COMMON_HPP_
+#endif  // COMMON_HPP_
