@@ -10,8 +10,8 @@ int main(int argc, char **argv)
   tga_color_t green = { 0, 255, 0 };
   tga_color_t red = { 0, 0, 255 };
 
-  int width = 8000;
-  int height = 8000;
+  int width = 800;
+  int height = 800;
   tga_image_t *image = tga_new(width, height);
 
   Model *model = NULL;

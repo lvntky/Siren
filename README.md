@@ -51,4 +51,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions or feedback, please contact leventkayadev [at] gmail [dot] com.
 
-
+## Showcase
+- First Wiremesh Rendering
+    - ![First Wiremesh Rendering](./docs/wiremesh.png)
