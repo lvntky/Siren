@@ -54,3 +54,5 @@ For questions or feedback, please contact leventkayadev [at] gmail [dot] com.
 ## Showcase
 - First Wiremesh Rendering
     - ![First Wiremesh Rendering](./docs/wiremesh.png)
+- Wiremesh Rendering in Gif
+    - ![First Wiremesh Rendering](./docs/wmgif.gif)
