@@ -1,10 +1,13 @@
 #include <iostream>
-
+#include <ctime>
+#include <random>
 #include "siren/bresenham_manager.hpp"
 #include "siren/model_manager.hpp"
 
 int main(int argc, char **argv)
 {
+      std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
   tga_color_t black = { 0, 0, 0 };
   tga_color_t white = { 255, 255, 255 };
   tga_color_t green = { 0, 255, 0 };
@@ -36,16 +39,9 @@ int main(int argc, char **argv)
       int y0 = (v0.y + 1.) * height / 2.;
       int x1 = (v1.x + 1.) * width / 2.;
       int y1 = (v1.y + 1.) * height / 2.;
-      tga_color_t color = white;
-      switch (j)
-      {
-        case 1: color = red; break;
-        case 2: color = green; break;
-        case 3: color = white; break;
-        default: break;
-      }
+      tga_color_t randomColor = {(std::rand() % 255), (std::rand() % 255), (std::rand() % 255)};
 
-      manager.line(x0, y0, x1, y1, image, color);
+      manager.line(x0, y0, x1, y1, image, randomColor);
     }
   }
 
