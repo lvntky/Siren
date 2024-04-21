@@ -1,30 +1,23 @@
-#ifndef MODEL_MANAGER_H_
-#define MODEL_MANAGER_H_
+#ifndef __MODEL_H__
+#define __MODEL_H__
 
-#include <string>
 #include <vector>
 
-#include "targalib/targalib.h"
+#include "misc/vec3f.hpp"
 
-struct Vertex
-{
-  float x, y, z;
-};
-
-struct Face
-{
-  int v1, v2, v3;
-};
-
-class ModelManager
+class Model
 {
  private:
-  std::vector<Vertex> vertices;
-  std::vector<Face> faces;
+  std::vector<Vec3f> verts_;
+  std::vector<std::vector<int>> faces_;
 
  public:
-  ModelManager(const char* filename);
-  void render(tga_image_t* image, tga_color_t color);
+  Model(const char *filename);
+  ~Model();
+  int nverts();
+  int nfaces();
+  Vec3f vert(int i);
+  std::vector<int> face(int idx);
 };
 
-#endif  // MODEL_MANAGER_H_
+#endif  //__MODEL_H__

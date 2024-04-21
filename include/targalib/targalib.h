@@ -65,12 +65,14 @@ extern "C"
   void tga_free(tga_image_t *image);
   int tga_read(const char *filename, tga_image_t *image);
   int tga_write(const char *filename, const tga_image_t *image);
-  void tga_set_pixel(const tga_image_t *image, int x, int y, tga_color_t color);
+  int tga_set_pixel(const tga_image_t *image, int x, int y, tga_color_t color);
   void tga_set_bg(const tga_image_t *image, tga_color_t color);
   void tga_flip_horizontally();
   void tga_flip_vertically();
   int tga_resize_image(tga_image_t *image, int new_width, int new_height);
   void tga_dump_headers(const tga_image_t *image, const char *output_file);
+  void tga_rotate_horizontal(tga_image_t *image);
+  void tga_rotate_vertical(tga_image_t *image);
 
 #ifdef __cplusplus
 }

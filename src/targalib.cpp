@@ -157,16 +157,55 @@ void tga_set_bg(const tga_image_t *image, tga_color_t color)
   }
 }
 
-void tga_set_pixel(const tga_image_t *image, int x, int y, tga_color_t color)
+int tga_set_pixel(const tga_image_t *image, int x, int y, tga_color_t color)
 {
-  if (x >= 0 && x < image->header.width && y >= 0 && y < image->header.height)
+  if (x >= 0 && x < image->header.width + 1 && y >= 0 && y < image->header.height + 1)
   {
     image->image_data[y * image->header.width + x] = color;
+    return 0;
   }
   else
   {
-    fprintf(stderr, "%s Invalid dot coordinates. Dot not drawn.\n", TARGALIB_ERROR);
-    return;
+    fprintf(stderr, "%s Invalid dot coordinates(x: %d, y: %d). Dot not drawn.\n", TARGALIB_ERROR, x, y);
+    return 1;
+  }
+}
+
+void tga_rotate_vertical(tga_image_t *image)
+{
+  // Calculate half of the height
+  int half_height = image->header.height / 2;
+  // Iterate over each row
+  for (int y = 0; y < half_height; ++y)
+  {
+    // Calculate the index of the row and its mirrored counterpart
+    int row_index = y * image->header.width;
+    int mirrored_row_index = (image->header.height - y - 1) * image->header.width;
+    // Swap the rows
+    for (int x = 0; x < image->header.width; ++x)
+    {
+      tga_color_t temp = image->image_data[row_index + x];
+      image->image_data[row_index + x] = image->image_data[mirrored_row_index + x];
+      image->image_data[mirrored_row_index + x] = temp;
+    }
+  }
+}
+
+void tga_rotate_horizontal(tga_image_t *image)
+{
+  // Calculate half of the width
+  int half_width = image->header.width / 2;
+  // Iterate over each column
+  for (int x = 0; x < half_width; ++x)
+  {
+    // Swap the pixels in each column
+    for (int y = 0; y < image->header.height; ++y)
+    {
+      tga_color_t temp = image->image_data[y * image->header.width + x];
+      image->image_data[y * image->header.width + x] =
+          image->image_data[y * image->header.width + (image->header.width - x - 1)];
+      image->image_data[y * image->header.width + (image->header.width - x - 1)] = temp;
+    }
   }
 }
 

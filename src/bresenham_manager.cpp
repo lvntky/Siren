@@ -1,5 +1,7 @@
 #include "siren/bresenham_manager.hpp"
 
+#include <iostream>
+
 BresenhamManager::BresenhamManager(tga_image_t* _image)
 {
   this->image = _image;
@@ -52,4 +54,44 @@ void BresenhamManager::drawLine()
 void BresenhamManager::setImage(tga_image_t* _image)
 {
   this->image = _image;
+}
+
+void BresenhamManager::line(int x0, int y0, int x1, int y1, tga_image_t* image, tga_color_t color)
+{
+  bool steep = false;
+  if (std::abs(x0 - x1) < std::abs(y0 - y1))
+  {
+    std::swap(x0, y0);
+    std::swap(x1, y1);
+    steep = true;
+  }
+  if (x0 > x1)
+  {
+    std::swap(x0, x1);
+    std::swap(y0, y1);
+  }
+
+  for (int x = x0; x <= x1; x++)
+  {
+    float t = 0.0f;
+    if (x1 - x0 != 0)
+    {
+      t = (x - x0) / static_cast<float>(x1 - x0);
+    }
+    int y = y0 * (1. - t) + y1 * t;
+    if (steep)
+    {
+      if (tga_set_pixel(image, y, x, color) != 0)
+      {
+        std::cout << "Error pixe y: " << y << "t: " << t << "y1: " << y1 << std::endl;
+      }
+    }
+    else
+    {
+      if (tga_set_pixel(image, x, y, color) != 0)
+      {
+        std::cout << "Error pixe y: " << y << "t: " << t << "y1: " << y1 << std::endl;
+      }
+    }
+  }
 }
