@@ -7,12 +7,21 @@ int main(int argc, char **argv)
 {
   tga_color_t black = { 0, 0, 0 };
   tga_color_t white = { 255, 255, 255 };
+  tga_color_t green = { 0, 255, 0 };
+  tga_color_t red = { 0, 0, 255 };
 
-  int width = 3000;
-  int height = 3000;
+  int width = 8000;
+  int height = 8000;
   tga_image_t *image = tga_new(width, height);
 
-  Model *model = new Model("./obj/african_head.obj");
+  Model *model = NULL;
+  if (argc > 1)
+  {
+    model = new Model(argv[1]);
+  } else {
+    model = new Model("./obj/african_head.obj");
+  }
+  
   BresenhamManager manager = NULL;
   manager.setImage(image);
 
@@ -27,7 +36,16 @@ int main(int argc, char **argv)
       int y0 = (v0.y + 1.) * height / 2.;
       int x1 = (v1.x + 1.) * width / 2.;
       int y1 = (v1.y + 1.) * height / 2.;
-      manager.line(x0, y0, x1, y1, image, white);
+      tga_color_t color = white;
+      switch (j)
+      {
+        case 1: color = red; break;
+        case 2: color = green; break;
+        case 3: color = white; break;
+        default: break;
+      }
+
+      manager.line(x0, y0, x1, y1, image, color);
     }
   }
 
