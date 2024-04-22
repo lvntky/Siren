@@ -209,7 +209,7 @@ void tga_rotate_horizontal(tga_image_t *image)
   }
 }
 
-//#endif //TARGALIB_IMPLEMENTATION
+// #endif //TARGALIB_IMPLEMENTATION
 /*
 -------------------------------------------------------------------------------
 This software available under unlicense

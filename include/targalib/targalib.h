@@ -80,4 +80,4 @@ extern "C"
 
 #endif  //__TARGALIB_H__
 
-//#ifdef TARGALIB_IMPLEMENTATION
+// #ifdef TARGALIB_IMPLEMENTATION

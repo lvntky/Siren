@@ -81,16 +81,32 @@ void BresenhamManager::line(int x0, int y0, int x1, int y1, tga_image_t* image, 
     int y = y0 * (1. - t) + y1 * t;
     if (steep)
     {
-      if (tga_set_pixel(image, y, x, color) != 0)
+      if (y >= 0 && y < image->header.height && x >= 0 && x < image->header.width)
       {
-        std::cout << "Error pixe y: " << y << "t: " << t << "y1: " << y1 << std::endl;
+        if (tga_set_pixel(image, y, x, color) != 0)
+        {
+          std::cout << "Error pixel y: " << y << " t: " << t << " y1: " << y1 << std::endl;
+        }
+      }
+      else
+      {
+        std::cout << "Out of bounds: "
+                  << " y: " << y << " x: " << x << std::endl;
       }
     }
     else
     {
-      if (tga_set_pixel(image, x, y, color) != 0)
+      if (x >= 0 && x < image->header.width && y >= 0 && y < image->header.height)
       {
-        std::cout << "Error pixe y: " << y << "t: " << t << "y1: " << y1 << std::endl;
+        if (tga_set_pixel(image, x, y, color) != 0)
+        {
+          std::cout << "Error pixel y: " << y << " t: " << t << " y1: " << y1 << std::endl;
+        }
+      }
+      else
+      {
+        std::cout << "Out of bounds: "
+                  << " x: " << x << " y: " << y << std::endl;
       }
     }
   }
