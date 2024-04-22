@@ -41,7 +41,7 @@ void BresenhamManager::drawLine()
   float x = x0;
   float y = y0;
 
-  for (int i = 0; i <= step; ++i)
+  for (float i = 0; i <= step; ++i)
   {
     int intX = static_cast<int>(x + 0.5f);  // Round to nearest integer
     int intY = static_cast<int>(y + 0.5f);  // Round to nearest integer
@@ -56,36 +56,36 @@ void BresenhamManager::setImage(tga_image_t* _image)
   this->image = _image;
 }
 
-void BresenhamManager::line(int x0, int y0, int x1, int y1, tga_image_t* image, tga_color_t color)
+void BresenhamManager::line(int _startX, int _startY, int _endX, int _endY, tga_image_t* _image, tga_color_t _color)
 {
   bool steep = false;
-  if (std::abs(x0 - x1) < std::abs(y0 - y1))
+  if (std::abs(_startX - _endX) < std::abs(_startY - _endY))
   {
-    std::swap(x0, y0);
-    std::swap(x1, y1);
+    std::swap(_startX, _startY);
+    std::swap(_endX, _endY);
     steep = true;
   }
-  if (x0 > x1)
+  if (_startX > _endX)
   {
-    std::swap(x0, x1);
-    std::swap(y0, y1);
+    std::swap(_startX, _endX);
+    std::swap(_startY, _endY);
   }
 
-  for (int x = x0; x <= x1; x++)
+  for (int x = _startX; x <= _endX; x++)
   {
     float t = 0.0f;
-    if (x1 - x0 != 0)
+    if (_endX - _startX != 0)
     {
-      t = (x - x0) / static_cast<float>(x1 - x0);
+      t = static_cast<float>(x - _startX) / static_cast<float>(_endX - _startX);
     }
-    int y = y0 * (1. - t) + y1 * t;
+    int y = static_cast<int>(static_cast<float>(_startY) * (1.0f - t) + static_cast<float>(_endY) * t);
     if (steep)
     {
-      if (y >= 0 && y < image->header.height && x >= 0 && x < image->header.width)
+      if (y >= 0 && y < _image->header.height && x >= 0 && x < _image->header.width)
       {
-        if (tga_set_pixel(image, y, x, color) != 0)
+        if (tga_set_pixel(_image, y, x, _color) != 0)
         {
-          std::cout << "Error pixel y: " << y << " t: " << t << " y1: " << y1 << std::endl;
+          std::cout << "Error pixel y: " << y << " t: " << t << " y1: " << _endY << std::endl;
         }
       }
       else
@@ -96,11 +96,11 @@ void BresenhamManager::line(int x0, int y0, int x1, int y1, tga_image_t* image, 
     }
     else
     {
-      if (x >= 0 && x < image->header.width && y >= 0 && y < image->header.height)
+      if (x >= 0 && x < _image->header.width && y >= 0 && y < _image->header.height)
       {
-        if (tga_set_pixel(image, x, y, color) != 0)
+        if (tga_set_pixel(_image, x, y, _color) != 0)
         {
-          std::cout << "Error pixel y: " << y << " t: " << t << " y1: " << y1 << std::endl;
+          std::cout << "Error pixel y: " << y << " t: " << t << " y1: " << _endY << std::endl;
         }
       }
       else

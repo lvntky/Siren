@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "siren/bresenham_manager.hpp"
+#include "siren/model_manager.hpp"
 
 Model::Model(const char *filename) : verts_(), faces_()
 {
@@ -15,17 +16,16 @@ Model::Model(const char *filename) : verts_(), faces_()
   if (in.fail())
     return;
   std::string line;
-  while (!in.eof())
+  while (std::getline(in, line))
   {
-    std::getline(in, line);
-    std::istringstream iss(line.c_str());
+    std::istringstream iss(line);
     char trash;
     if (!line.compare(0, 2, "v "))
     {
       iss >> trash;
       Vec3f v;
       for (int i = 0; i < 3; i++)
-        iss >> v.raw[i];
+        iss >> v[i];  // Use operator[] to set components
       verts_.push_back(v);
     }
     else if (!line.compare(0, 2, "f "))
@@ -50,12 +50,12 @@ Model::~Model()
 
 int Model::nverts()
 {
-  return (int)verts_.size();
+  return static_cast<int>(verts_.size());
 }
 
 int Model::nfaces()
 {
-  return (int)faces_.size();
+  return static_cast<int>(faces_.size());
 }
 
 std::vector<int> Model::face(int idx)
