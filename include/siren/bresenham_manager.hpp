@@ -5,6 +5,7 @@
 #include <cstdint>
 
 #include "../targalib/targalib.h"
+#include "misc/vec3f.hpp"
 
 class BresenhamManager
 {
@@ -24,5 +25,6 @@ class BresenhamManager
   void setImage(tga_image_t* image);
   void drawLine();
   void line(int x0, int y0, int x1, int y1, tga_image_t* image, tga_color_t color);
+  void rasterizeTriangle(int x0, int y0, int x1, int y1, int x2, int y2, tga_image_t* image, tga_color_t color);
 };
 #endif  // BRESENHAM_MANAGER_HPP_

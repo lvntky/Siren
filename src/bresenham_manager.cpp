@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "misc/vec3f.hpp"
+
 BresenhamManager::BresenhamManager(tga_image_t* _image)
 {
   this->image = _image;
@@ -109,5 +111,74 @@ void BresenhamManager::line(int _startX, int _startY, int _endX, int _endY, tga_
                   << " x: " << x << " y: " << y << std::endl;
       }
     }
+  }
+}
+
+void drawHorizontalLine(int x0, int x1, int y, tga_image_t* image, tga_color_t color)
+{
+  for (int x = x0; x <= x1; x++)
+  {
+    tga_set_pixel(image, x, y, color);
+  }
+}
+
+void BresenhamManager::rasterizeTriangle(
+    int x0,
+    int y0,
+    int x1,
+    int y1,
+    int x2,
+    int y2,
+    tga_image_t* image,
+    tga_color_t color)
+{
+  // Sort vertices by y-coordinate
+  if (y0 > y1)
+  {
+    std::swap(y0, y1);
+    std::swap(x0, x1);
+  }
+  if (y0 > y2)
+  {
+    std::swap(y0, y2);
+    std::swap(x0, x2);
+  }
+  if (y1 > y2)
+  {
+    std::swap(y1, y2);
+    std::swap(x1, x2);
+  }
+
+  // Calculate height of the triangle
+  int totalHeight = y2 - y0;
+
+  // Fill top part of the triangle
+  for (int y = y0; y <= y1; y++)
+  {
+    int segmentHeight = y1 - y0 + 1;
+    float alpha = static_cast<float>(y - y0) / totalHeight;
+    float beta = static_cast<float>(y - y0) / segmentHeight;
+    int ax = x0 + (x2 - x0) * alpha;
+    int bx = x0 + (x1 - x0) * beta;
+    if (ax > bx)
+    {
+      std::swap(ax, bx);
+    }
+    drawHorizontalLine(ax, bx, y, image, color);
+  }
+
+  // Fill bottom part of the triangle
+  for (int y = y1 + 1; y <= y2; y++)
+  {
+    int segmentHeight = y2 - y1 + 1;
+    float alpha = static_cast<float>(y - y0) / totalHeight;
+    float beta = static_cast<float>(y - y1) / segmentHeight;
+    int ax = x0 + (x2 - x0) * alpha;
+    int bx = x1 + (x2 - x1) * beta;
+    if (ax > bx)
+    {
+      std::swap(ax, bx);
+    }
+    drawHorizontalLine(ax, bx, y, image, color);
   }
 }
