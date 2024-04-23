@@ -6,11 +6,17 @@
 #include "siren/bresenham_manager.hpp"
 #include "siren/model_manager.hpp"
 
+// Function to calculate dot product of two vectors
+float dot(Vec3f a, Vec3f b) {
+    return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+
+
 int main(int argc, char **argv)
 {
   std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-  tga_color_t grey = { 105, 105, 105 };
   uint16_t width = 800;
   uint16_t height = 800;
   tga_image_t *image = tga_new(width, height);
@@ -32,16 +38,13 @@ int main(int argc, char **argv)
 
   BresenhamManager manager(image);
 
+  // Define light direction
+  Vec3f lightDirection = { 0.0f, 0.0f, 1.0f };  // pointing towards the model
+
   for (int i = 0; i < model->nfaces(); i++)
   {
     std::vector<int> face = model->face(i);
-    if (face.size() != 3)
-    {
-      std::cerr << "Invalid face data\n";
-      tga_free(image);
-      delete model;
-      return 1;
-    }
+
     // Get vertices of the triangle
     Vec3f v0 = model->vert(face[0]);
     Vec3f v1 = model->vert(face[1]);
@@ -56,19 +59,50 @@ int main(int argc, char **argv)
     int y2 = static_cast<int>((v2.y + 1.0f) * height / 2.0f);
 
     // Calculate normal of the triangle
-    /*
-    Vec3f normal = cross(v1 - v0, v2 - v0).normalize();
+    Vec3f normal = { 0.0f, 0.0f, 0.0f };
+    Vec3f edge1 = { v1.x - v0.x, v1.y - v0.y, v1.z - v0.z };
+    Vec3f edge2 = { v2.x - v0.x, v2.y - v0.y, v2.z - v0.z };
+    normal.x = edge1.y * edge2.z - edge1.z * edge2.y;
+    normal.y = edge1.z * edge2.x - edge1.x * edge2.z;
+    normal.z = edge1.x * edge2.y - edge1.y * edge2.x;
+
+    std::cout << "edge1: (" << edge1.x << ", " << edge1.y << ", " << edge1.z << ")" << std::endl;
+    std::cout << "edge2: (" << edge2.x << ", " << edge2.y << ", " << edge2.z << ")" << std::endl;
+    std::cout << "normal before normalization: (" << normal.x << ", " << normal.y << ", " << normal.z << ")" << std::endl;
 
     // If the normal is pointing away from the camera, skip this triangle (backface culling)
     if (normal.z <= 0)
-        continue;
-    */
+      continue;
 
-    // Fill the triangle with a random color
-    tga_color_t randomColor = { static_cast<uint8_t>(std::rand() % 255),
-                                static_cast<uint8_t>(std::rand() % 255),
-                                static_cast<uint8_t>(std::rand() % 255) };
-    manager.rasterizeTriangle(x0, y0, x1, y1, x2, y2, image, randomColor);
+    // Normalize the normal
+    float length = std::sqrt(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
+    if (length == 0)
+    {
+      std::cerr << "Zero length normal vector encountered" << std::endl;
+      continue;
+    }
+    normal.x /= length;
+    normal.y /= length;
+    normal.z /= length;
+
+    std::cout << "normal after normalization: (" << normal.x << ", " << normal.y << ", " << normal.z << ")" << std::endl;
+
+    // Calculate diffuse lighting
+    // Calculate diffuse lighting
+    float intensity = dot(normal, lightDirection);
+    if (intensity < 0)
+    {
+      intensity = 0;  // Ensure intensity is non-negative
+    }
+
+    // Apply lighting to the color
+    tga_color_t litColor = { static_cast<uint8_t>(255 * intensity),
+                             static_cast<uint8_t>(255 * intensity),
+                             static_cast<uint8_t>(255 * intensity) };
+
+    std::cout << "intensity: " << intensity << std::endl;
+    // Fill the triangle with the lit color
+    manager.rasterizeTriangle(x0, y0, x1, y1, x2, y2, image, litColor);
   }
 
   tga_rotate_vertical(image);

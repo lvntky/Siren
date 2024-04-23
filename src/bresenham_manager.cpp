@@ -118,6 +118,7 @@ void drawHorizontalLine(int x0, int x1, int y, tga_image_t* image, tga_color_t c
 {
   for (int x = x0; x <= x1; x++)
   {
+    // std::cout << "x: " << x0 << " x1: " << x1 << " y: " << y << std::endl;
     tga_set_pixel(image, x, y, color);
   }
 }
@@ -155,11 +156,11 @@ void BresenhamManager::rasterizeTriangle(
   // Fill top part of the triangle
   for (int y = y0; y <= y1; y++)
   {
-    int segmentHeight = y1 - y0 + 1;
-    float alpha = static_cast<float>(y - y0) / totalHeight;
-    float beta = static_cast<float>(y - y0) / segmentHeight;
-    int ax = x0 + (x2 - x0) * alpha;
-    int bx = x0 + (x1 - x0) * beta;
+    float segmentHeight = static_cast<float>(y1 - y0 + 1);
+    float alpha = (segmentHeight == 1) ? 0 : static_cast<float>(y - y0) / (segmentHeight - 1);
+    float beta = (totalHeight == 0) ? 0 : static_cast<float>(y - y0) / totalHeight;
+    int ax = static_cast<int>(x0 + (x2 - x0) * beta);
+    int bx = static_cast<int>(x0 + (x1 - x0) * alpha);
     if (ax > bx)
     {
       std::swap(ax, bx);
@@ -170,11 +171,11 @@ void BresenhamManager::rasterizeTriangle(
   // Fill bottom part of the triangle
   for (int y = y1 + 1; y <= y2; y++)
   {
-    int segmentHeight = y2 - y1 + 1;
-    float alpha = static_cast<float>(y - y0) / totalHeight;
-    float beta = static_cast<float>(y - y1) / segmentHeight;
-    int ax = x0 + (x2 - x0) * alpha;
-    int bx = x1 + (x2 - x1) * beta;
+    float segmentHeight = static_cast<float>(y2 - y1 + 1);
+    float alpha = (segmentHeight == 1) ? 0 : static_cast<float>(y - y1) / (segmentHeight - 1);
+    float beta = (totalHeight == 0) ? 0 : static_cast<float>(y - y0) / totalHeight;
+    int ax = static_cast<int>(x1 + (x2 - x1) * alpha);
+    int bx = static_cast<int>(x0 + (x2 - x0) * beta);
     if (ax > bx)
     {
       std::swap(ax, bx);
