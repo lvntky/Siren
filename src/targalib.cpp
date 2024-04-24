@@ -159,7 +159,7 @@ void tga_set_bg(const tga_image_t *image, tga_color_t color)
 
 int tga_set_pixel(const tga_image_t *image, int x, int y, tga_color_t color)
 {
-  if (x >= 0 && x < image->header.width + 1 && y >= 0 && y < image->header.height + 1)
+  if (x >= 0 && x < image->header.width && y >= 0 && y < image->header.height)
   {
     image->image_data[y * image->header.width + x] = color;
     return 0;
