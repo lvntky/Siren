@@ -2,20 +2,23 @@
 #include <ctime>
 #include <iostream>
 #include <random>
+#include <vector>
 
 #include "siren/bresenham_manager.hpp"
 #include "siren/model_manager.hpp"
 
 // Function to calculate dot product of two vectors
-float dot(Vec3f a, Vec3f b) {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
+float dot(Vec3f a, Vec3f b)
+{
+  return a.x * b.x + a.y * b.y + a.z * b.z;
 }
-
-
 
 int main(int argc, char **argv)
 {
   std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+  std::vector<std::string> zVerticeVector;
+  int zVectorCounter = 0;
 
   uint16_t width = 800;
   uint16_t height = 800;
@@ -57,6 +60,23 @@ int main(int argc, char **argv)
     int y1 = static_cast<int>((v1.y + 1.0f) * height / 2.0f);
     int x2 = static_cast<int>((v2.x + 1.0f) * width / 2.0f);
     int y2 = static_cast<int>((v2.y + 1.0f) * height / 2.0f);
+
+    // z vertices of one triangle
+    int z0 = static_cast<int>((v0.z + 1.0f) * height / 2.0f);
+    int z1 = static_cast<int>((v1.z + 1.0f) * height / 2.0f);
+    int z2 = static_cast<int>((v2.z + 1.0f) * width / 2.0f);
+
+    //    std::cout << "z vertices of the triangle z0: " << z0 << " z1: " << z1 << " z2: " << z2 << std::endl;
+    zVerticeVector.push_back(std::to_string(zVectorCounter));
+    zVerticeVector.push_back(". ");
+    zVerticeVector.push_back(std::to_string(z0));
+    zVerticeVector.push_back(" - ");
+    zVerticeVector.push_back(std::to_string(z1));
+    zVerticeVector.push_back(" - ");
+    zVerticeVector.push_back(std::to_string(z2));
+    zVerticeVector.push_back(" end of triangle\n");
+
+    zVectorCounter++;
 
     // Calculate normal of the triangle
     Vec3f normal = { 0.0f, 0.0f, 0.0f };
@@ -108,6 +128,13 @@ int main(int argc, char **argv)
   tga_rotate_vertical(image);
   tga_write("output.tga", image);
   tga_free(image);
+
+
+  for (auto it : zVerticeVector)
+  {
+    std::cout << it;
+  }
+  std::cerr << "# v# " << model->nverts() << " f# " << model->nfaces() << std::endl;
   delete model;
 
   return 0;
