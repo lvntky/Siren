@@ -1,9 +1,9 @@
+#include "siren/model_manager.hpp"
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
-
-#include "siren/model_manager.hpp"
 
 Model::Model(const char *filename) : verts_(), faces_(), textureCoordinates(), textureFaces()
 {
