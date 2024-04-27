@@ -44,6 +44,9 @@ int main(int argc, char **argv)
   // Define light direction
   Vec3f lightDirection = { 0.0f, 0.0f, 1.0f };  // pointing towards the model
 
+  // the z-buffer
+  std::vector<float> zBuffer(width * height, std::numeric_limits<float>::max());
+
   for (int i = 0; i < model->nfaces(); i++)
   {
     std::vector<int> face = model->face(i);
@@ -128,7 +131,6 @@ int main(int argc, char **argv)
   tga_rotate_vertical(image);
   tga_write("output.tga", image);
   tga_free(image);
-
 
   for (auto it : zVerticeVector)
   {
